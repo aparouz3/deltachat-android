@@ -61,10 +61,9 @@ jobs:
           path: tgui/build/outputs/aar/tgui-debug.aar
 
   build-full:
-    name: Build full app (gplay debug, arm64)
+    name: Build full app (foss debug, arm64)
     runs-on: ubuntu-latest
     needs: build-tgui
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       pull-requests: write
@@ -125,16 +124,16 @@ jobs:
           export PATH="${PATH}:${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin/"
           scripts/install-toolchains.sh && scripts/ndk-make.sh arm64-v8a
 
-      - name: Build APK (foss flavor, no google-services)
-        run: ./gradlew --no-daemon -PABI_FILTER=arm64-v8a assembleFossDebug -Dhttps.proxyHost= -Dhttps.proxyPort=
+      - name: Build APK (foss debug)
+        run: ./gradlew --no-daemon -PuseStandardRepos=true -PABI_FILTER=arm64-v8a assembleFossDebug --stacktrace
 
       - name: Upload APK
         id: upload
-        if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: app-preview.apk
           path: 'build/outputs/apk/foss/debug/*.apk'
+          if-no-files-found: error
 
       - name: Add artifact links to PR
         if: github.event.pull_request.head.repo.full_name == github.repository

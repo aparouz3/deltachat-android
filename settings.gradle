@@ -3,7 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         // Use standard repos on CI (google(), mavenCentral()), mirrors only on local machine
         // where dl.google.com is sinkholed. Pass -PuseStandardRepos=true on CI.
-        def useStandardRepos = rootProject.hasProperty('useStandardRepos') && rootProject.useStandardRepos == 'true'
+        def useStandardRepos = providers.gradleProperty('useStandardRepos').getOrElse('false') == 'true'
         if (useStandardRepos) {
             google()
             mavenCentral()

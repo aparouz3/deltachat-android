@@ -704,22 +704,22 @@ public class VoIPService extends Service implements SensorEventListener, AudioMa
 		synchronized public void setTarget(VideoSink newTarget) {
 			if (target != newTarget) {
 				if (target != null) {
-					target.setParentSink(null);
+                    // TGDELTA: target.setParentSink removed upstream; no-op.
 				}
 				target = newTarget;
 				if (target != null) {
-					target.setParentSink(this);
+                    // TGDELTA: target.setParentSink removed upstream; no-op.
 				}
 			}
 		}
 
 		synchronized public void setBackground(VideoSink newBackground) {
 			if (background != null) {
-				background.setParentSink(null);
+                    // TGDELTA: background.setParentSink removed upstream; no-op.
 			}
 			background = newBackground;
 			if (background != null) {
-				background.setParentSink(this);
+                    // TGDELTA: background.setParentSink removed upstream; no-op.
 			}
 		}
 

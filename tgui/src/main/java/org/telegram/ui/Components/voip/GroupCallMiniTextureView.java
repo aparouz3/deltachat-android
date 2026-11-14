@@ -68,7 +68,6 @@ import org.telegram.ui.Components.MotionBackgroundDrawable;
 import org.telegram.ui.Components.RLottieImageView;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.GroupCallActivity;
-import org.webrtc.GlGenericDrawer;
 import org.webrtc.RendererCommon;
 
 import java.util.ArrayList;
@@ -656,7 +655,11 @@ public class GroupCallMiniTextureView extends FrameLayout implements GroupCallSt
         }
     }
 
-    public void getRenderBufferBitmap(GlGenericDrawer.TextureCallback callback) {
+    public interface TextureCallback {
+        void onTextureReady(Bitmap bitmap, int rotation);
+    }
+
+    public void getRenderBufferBitmap(TextureCallback callback) {
         textureView.renderer.getRenderBufferBitmap(callback);
     }
 

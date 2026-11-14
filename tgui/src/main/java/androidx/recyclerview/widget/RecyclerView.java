@@ -11204,6 +11204,17 @@ public class RecyclerView extends ViewGroup implements ScrollingView,
             return mOwnerRecyclerView.getAdapterPositionFor(this);
         }
 
+        // TGDELTA: AndroidX added these two aliases in recyclerview 1.2. Telegram's
+        // vendored fork predates them, and Delta Chat's own code calls them. They
+        // are exact synonyms for getAdapterPosition().
+        public final int getBindingAdapterPosition() {
+            return getAdapterPosition();
+        }
+
+        public final int getAbsoluteAdapterPosition() {
+            return getAdapterPosition();
+        }
+
         /**
          * When LayoutManager supports animations, RecyclerView tracks 3 positions for ViewHolders
          * to perform animations.

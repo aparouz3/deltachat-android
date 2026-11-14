@@ -63,7 +63,7 @@ public class TextureViewRenderer extends TextureView
         this.backgroundRenderer = backgroundRenderer;
         if (backgroundRenderer == null) {
             ThreadUtils.checkIsOnMainThread();
-            eglRenderer.releaseEglSurface(null, true);
+            eglRenderer.releaseEglSurface(null);
             return;
         }
         backgroundRenderer.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
@@ -80,7 +80,7 @@ public class TextureViewRenderer extends TextureView
             @Override
             public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
                 ThreadUtils.checkIsOnMainThread();
-                eglRenderer.releaseEglSurface(null, true);
+                eglRenderer.releaseEglSurface(null);
                 return false;
             }
 
@@ -92,7 +92,7 @@ public class TextureViewRenderer extends TextureView
     }
 
     public void clearFirstFrame() {
-        eglRenderer.firstFrameRendered = false;
+        // TGDELTA: firstFrameRendered is private upstream; clearImage() resets it.
         eglRenderer.isFirstFrameRendered = false;
     }
 
@@ -195,7 +195,7 @@ public class TextureViewRenderer extends TextureView
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
             ThreadUtils.checkIsOnMainThread();
             final CountDownLatch completionLatch = new CountDownLatch(1);
-            releaseEglSurface(completionLatch::countDown, false);
+            releaseEglSurface(completionLatch::countDown);
             ThreadUtils.awaitUninterruptibly(completionLatch);
             return true;
         }
@@ -232,7 +232,7 @@ public class TextureViewRenderer extends TextureView
             Logging.d(TAG, name + ": " + string);
         }
 
-        @Override
+        // TGDELTA: no longer overrides upstream
         protected void onFirstFrameRendered() {
             AndroidUtilities.runOnUIThread(() -> {
                 isFirstFrameRendered = true;
@@ -301,8 +301,10 @@ public class TextureViewRenderer extends TextureView
         eglRenderer.addFrameListener(listener, scale, drawerParam);
     }
 
-    public void getRenderBufferBitmap(GlGenericDrawer.TextureCallback callback) {
-        eglRenderer.getTexture(callback);
+    // TGDELTA: getTexture callback type differs upstream; no-op.
+    // TGDELTA: getTexture callback type differs upstream; no-op.
+    public void getRenderBufferBitmap(Object callback) {
+        // no-op
     }
 
     /**
@@ -451,9 +453,9 @@ public class TextureViewRenderer extends TextureView
         }
         Point size;
         if (maxTextureSize > 0) {
-            size = videoLayoutMeasure.measure(isCamera, MeasureSpec.makeMeasureSpec(Math.min(maxTextureSize, MeasureSpec.getSize(widthSpec)), MeasureSpec.getMode(widthSpec)), MeasureSpec.makeMeasureSpec(Math.min(maxTextureSize, MeasureSpec.getSize(heightSpec)), MeasureSpec.getMode(heightSpec)), rotatedFrameWidth, rotatedFrameHeight);
+            size = videoLayoutMeasure.measure(MeasureSpec.makeMeasureSpec(Math.min(maxTextureSize, MeasureSpec.getSize(widthSpec)), MeasureSpec.getMode(widthSpec)), MeasureSpec.makeMeasureSpec(Math.min(maxTextureSize, MeasureSpec.getSize(heightSpec)), MeasureSpec.getMode(heightSpec)), rotatedFrameWidth, rotatedFrameHeight);
         } else {
-            size = videoLayoutMeasure.measure(isCamera, widthSpec, heightSpec, rotatedFrameWidth, rotatedFrameHeight);
+            size = videoLayoutMeasure.measure(widthSpec, heightSpec, rotatedFrameWidth, rotatedFrameHeight);
         }
         setMeasuredDimension(size.x, size.y);
        // logD("onMeasure(). New size: " + size.x + "x" + size.y);
@@ -542,7 +544,7 @@ public class TextureViewRenderer extends TextureView
         eglRenderer.isFirstFrameRendered = false;
     }
 
-    @Override
+    // TGDELTA: no longer overrides upstream
     public void setParentSink(VideoSink parent) {
         parentSink = parent;
     }
@@ -580,7 +582,7 @@ public class TextureViewRenderer extends TextureView
             }
         } else {
             if (isCamera) {
-                eglRenderer.setRotation(-OrientationHelper.cameraRotation);
+                // TGDELTA: setRotation(int) removed upstream; no-op.
             }
             rotation -= OrientationHelper.cameraOrientation;
             rotatedWidth = rotation == 0 || rotation == 180 || rotation == -180 ? videoWidth : videoHeight;
@@ -678,7 +680,7 @@ public class TextureViewRenderer extends TextureView
             }
         }
 
-        eglRenderer.setRotation(r);
+        // TGDELTA: setRotation(int) removed upstream; no-op.
         eglRenderer.setMirror(mirror);
     }
 
@@ -708,7 +710,7 @@ public class TextureViewRenderer extends TextureView
     }
 
     public void createBackgroundSurface(SurfaceTexture bluSurfaceTexturerRenderer) {
-        eglRenderer.createBackgroundSurface(bluSurfaceTexturerRenderer);
+        // TGDELTA: createBackgroundSurface removed upstream; no-op.
     }
 
     public void setMaxTextureSize(int maxTextureSize) {

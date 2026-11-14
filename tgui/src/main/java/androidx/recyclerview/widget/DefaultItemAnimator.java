@@ -356,6 +356,14 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
             }).start();
     }
 
+    // TGDELTA: Telegram's fork folds the AndroidX ItemHolderInfo overloads of
+    // animateMove/animateRemove into single methods. Delta Chat's
+    // DeleteItemAnimator overrides the plain AndroidX signature, so provide it.
+    public boolean animateMove(final RecyclerView.ViewHolder holder,
+            int fromX, int fromY, int toX, int toY) {
+        return animateMove(holder, null, fromX, fromY, toX, toY);
+    }
+
     @Override
     public boolean animateMove(final RecyclerView.ViewHolder holder, ItemHolderInfo info, int fromX, int fromY,
             int toX, int toY) {
